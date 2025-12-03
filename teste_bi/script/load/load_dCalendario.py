@@ -41,15 +41,11 @@ def load_dcalendario():
     dCalendario['Trimestre'] = dCalendario['Date'].dt.quarter
     
     meses_pt = {
-        1: 'Jan', 2: 'Fev', 3: 'Mar', 4: 'Abr', 5: 'Mai', 6: 'Jun', 
-        7: 'Jul', 8: 'Ago', 9: 'Set', 10: 'Out', 11: 'Nov', 12: 'Dez'
+        1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril', 5: 'Maio', 6: 'Junho', 
+        7: 'Julho', 8: 'Agosto', 9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro'
     }
     dCalendario['MesNome'] = dCalendario['Mes'].map(meses_pt)
     
-    # Colunas Auxiliares Power BI
-    dCalendario['SortMesAno'] = dCalendario['Ano'] * 100 + dCalendario['Mes']
-    dCalendario['MesAno'] = dCalendario['MesNome'] + "/" + dCalendario['Ano'].astype(str)
-
     output_path = os.path.join(ENRICH_PATH, 'dCalendario.csv')
     dCalendario.to_csv(output_path, index=False, sep=';', decimal=',', encoding='utf-8-sig')
     print(f"SUCESSO: dCalendario gerada de {min_date.date()} a {max_date.date()}.\n")
