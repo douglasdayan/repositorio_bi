@@ -2,60 +2,61 @@ import pandas as pd
 import os
 import sys
 
-# Configuração
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-CLEAN_PATH = os.path.join(BASE_DIR, 'files', 'clean')
-ENRICH_PATH = os.path.join(BASE_DIR, 'files', 'enrich')
+SOURCE_PATH = os.path.join(BASE_DIR, 'files', 'clean')
+TARGET_PATH = os.path.join(BASE_DIR, 'files', 'enrich')
 
-os.makedirs(ENRICH_PATH, exist_ok=True)
+def get_data(filename):
+    input_path = os.path.join(SOURCE_PATH, filename)
+    if not os.path.exists(input_path):
+        print(f"{filename} não encontrado.")
+        return None
+    return pd.read_csv(input_path, sep=';', decimal=',', encoding='utf-8')
+
+def normalize_cnpj(series):
+    return series.astype(str).str.replace(r'\.0$', '', regex=True).replace(['nan', 'NaN'], '')
 
 def load_dempresas():
-    print("--- [LOAD] Gerando Dimensão: dEmpresas ---")
+    df_cot = get_data('transform_cotacoes.csv')
+    if df_cot is None:
+        sys.exit("transform_cotacoes.csv necessário.")
     
-    # 1. Carrega a Tabela Ponte
-    try:
-        dEmpresas = pd.read_csv(os.path.join(CLEAN_PATH, 'clean_empresas_bolsa.csv'), sep=';', decimal=',', encoding='utf-8')
+    dEmpresas = df_cot[['cd_acao', 'cd_acao_rdz']].drop_duplicates()
+    
+    df_cad = get_data('transform_empresas_bolsa.csv')
+    if df_cad is not None:
+        cols = ['cd_acao_rdz', 'nm_empresa', 'vl_cnpj', 'setor_economico', 'subsetor', 'segmento']
+    
+        df_atributos = df_cad[df_cad.columns.intersection(cols)].drop_duplicates(subset=['cd_acao_rdz'])
+        df_atributos.rename(columns={'vl_cnpj': 'cnpj'}, inplace=True)
         
-        # Seleciona colunas chave
-        dEmpresas = dEmpresas[['cd_acao', 'nm_empresa', 'vl_cnpj', 'setor_economico', 'subsetor', 'segmento']]
-        dEmpresas.rename(columns={'vl_cnpj': 'cnpj', 'cd_acao': 'ticker'}, inplace=True)
-        
-    except FileNotFoundError:
-        print("ERRO CRÍTICO: clean_empresas_bolsa.csv não encontrado.")
-        sys.exit(1)
+        dEmpresas = dEmpresas.merge(df_atributos, on='cd_acao_rdz', how='left')
 
-    # 2. Lista de Enriquecimentos
-    enrich_files = [
-        'clean_df_empresas.csv',
-        'clean_empresas_nivel_atividade.csv',
-        'clean_empresas_porte.csv',
-        'clean_empresas_saude_tributaria.csv',
-        'clean_empresas_simples.csv'
+    files = [
+        'transform_df_empresas.csv',
+        'transform_empresas_nivel_atividade.csv',
+        'transform_empresas_porte.csv',
+        'transform_empresas_saude_tributaria.csv',
+        'transform_empresas_simples.csv'
     ]
 
-    for file_name in enrich_files:
-        file_path = os.path.join(CLEAN_PATH, file_name)
-        if os.path.exists(file_path):
-            try:
-                df_aux = pd.read_csv(file_path, sep=';', decimal=',', encoding='utf-8')
-                
-                # Garante que CNPJ é string
-                if 'cnpj' in df_aux.columns:
-                    df_aux['cnpj'] = df_aux['cnpj'].astype(str).str.replace(r'\.0$', '', regex=True)
-                    dEmpresas['cnpj'] = dEmpresas['cnpj'].astype(str).str.replace(r'\.0$', '', regex=True)
-                    
-                    dEmpresas = dEmpresas.merge(df_aux, on='cnpj', how='left')
-                    print(f"   -> Enriquecido com {file_name}")
-            except Exception as e:
-                print(f"   AVISO: Falha ao ler {file_name}: {e}")
+    for f in files:
+        df_aux = get_data(f)
+        if df_aux is not None and 'cnpj' in df_aux.columns:
+            df_aux['cnpj'] = normalize_cnpj(df_aux['cnpj'])
+            if 'cnpj' in dEmpresas.columns:
+                dEmpresas['cnpj'] = normalize_cnpj(dEmpresas['cnpj'])
+                dEmpresas = dEmpresas.merge(df_aux, on='cnpj', how='left')
+            
+    cols_limpar = ['cnpj', 'optante_simples', 'optante_simei', 'saude_tributaria', 'nivel_atividade']
+    
+    cols_existentes = [c for c in cols_limpar if c in dEmpresas.columns]
+    
+    dEmpresas[cols_existentes] = dEmpresas[cols_existentes].replace(['nan', 'NaN', 'NAN'], '')
 
-    # 3. Limpeza Final
-    dEmpresas['cnpj'] = dEmpresas['cnpj'].replace('nan', '')
+    dEmpresas.to_csv(os.path.join(TARGET_PATH, 'dEmpresas.csv'), index=False, sep=';', decimal=',', encoding='utf-8-sig')
 
-    # 4. Salva como dEmpresas.csv
-    output_path = os.path.join(ENRICH_PATH, 'dEmpresas.csv')
-    dEmpresas.to_csv(output_path, index=False, sep=';', decimal=',', encoding='utf-8-sig')
-    print(f"SUCESSO: dEmpresas gerada com {len(dEmpresas)} linhas.\n")
+    print(f"dEmpresas gerada com {len(dEmpresas)} linhas.")
 
 if __name__ == "__main__":
     load_dempresas()
