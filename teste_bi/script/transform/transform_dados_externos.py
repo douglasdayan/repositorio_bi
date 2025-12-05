@@ -6,7 +6,6 @@ SOURCE_PATH = os.path.join(BASE_DIR, 'files', 'raw')
 TARGET_PATH = os.path.join(BASE_DIR, 'files', 'clean')
 
 def clean_numeric(series):
-    
     if series.dtype == 'object':
         series = series.astype(str).str.replace(',', '.')
     return pd.to_numeric(series, errors='coerce')
@@ -34,13 +33,18 @@ def transform_dados_externos():
 
         try:
             df = pd.read_csv(input_path, sep=';', decimal=',', encoding='utf-8')
+            
             col_data = [c for c in df.columns if 'Data' in c][0]
             col_valor = [c for c in df.columns if source_column in c][0]
             
-            df['Data'] = pd.to_datetime(df[col_data], format='%d/%m/%Y', errors='coerce')
+            df['Data_Temp'] = df[col_data].astype(str).str.split(' ').str[0]
+            
+            df['Data'] = pd.to_datetime(df['Data_Temp'], format='%d/%m/%Y', errors='coerce')
+            
             df[target_column] = clean_numeric(df[col_valor])
             
             df = df[['Data', target_column]]
+
             df.to_csv(output_path, index=False, sep=';', decimal=',', encoding='utf-8')
 
             print(f"{source_file} -> {target_file} ({len(df)} linhas)")
