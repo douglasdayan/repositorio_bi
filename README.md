@@ -1,81 +1,122 @@
-📊 Monitor de Mercado B3 & Analytics - Neoway Challenge
+# 📊 Monitor de Mercado B3 - Case Neoway
 
-Este projeto é uma solução End-to-End de Análise de Dados desenvolvida para monitorar o mercado de ações brasileiro (B3), cruzando dados financeiros (cotações) com dados cadastrais enriquecidos (compliance e perfil tributário).
+Este projeto é uma solução de *Análise de Dados* desenvolvida para monitorar o mercado de ações brasileiro (B3), cruzando dados financeiros (cotações) com dados cadastrais.
 
-O objetivo foi simular o ambiente de dados da Neoway, transformando dados brutos em inteligência de mercado para tomada de decisão estratégica.
+O objetivo foi simular o ambiente de dados da **Neoway**, transformando dados brutos em inteligência de mercado para tomada de decisão estratégica.
 
-![alt text](print_1.png)
+![Capa do Projeto](files/images/print_1.png)
 
-💼 O Desafio de Negócio
+## 💼 O Desafio de Negócio
+
 O mercado financeiro gera milhões de registros diários, mas dados isolados não geram insights. O desafio consistiu em:
 
-Ingerir e Tratar grandes volumes de dados de cotações históricas e cadastro de empresas.
+* **Ingerir e tratar** grandes volumes de dados históricos e cadastro de empresas.
+* **Enriquecer** a análise com indicadores macroeconômicos (Dólar, Selic, IPCA).
+* **Desenvolver um Dashboard** que atendesse a três perfis: o Analista Técnico (Micro), o Gestor de Portfólio (Macro) e o Auditor (Compliance).
 
-Enriquecer a análise com indicadores macroeconômicos (Dólar, Selic, IPCA).
+## 🛠️ Arquitetura da Solução
 
-Desenvolver um Dashboard que atendesse a três perfis: o Analista Técnico (Micro), o Gestor de Portfólio (Macro) e o Auditor (Compliance).
+O projeto segue a arquitetura **Raw, Clean e Enrich**, garantindo governança e performance.
 
-🛠️ Arquitetura da Solução
-O projeto segue a arquitetura de Medallion (Bronze, Silver, Gold), garantindo governança e performance.
+* **ETL:** Python utilizando a biblioteca Pandas para limpeza, tipagem e criação das tabelas fato e dimensão.
+* **Modelagem:** Star Schema (Fato Cotações, Fato Dados Externos, Dimensão Calendário, Dimensão Empresas).
+* **Analytics:** Microsoft Power BI com medidas DAX avançadas para estatística financeira.
 
-ETL & Engenharia: Python usando biblioteca Pandas para limpeza, tipagem e criação das tabelas Fato/Dimensão.
+---
+## 📈 Tour pelo Dashboard
 
-Modelagem: Star Schema (Fato Cotações, Fato Dados Externos, Dimensão Calendário, Dimensão Empresas).
+### 1. Monitor de Ativos
+   Focada na análise de ativos isoladamente, esta tela permite dissecar o comportamento de um ativo específico.
+   
+* **Destaque Técnico:** Implementação de gráfico Candlestick combinado com médias móveis.
+* **Gestão de Risco:** Gráfico de Drawdown Histórico, calculado via DAX para medir a queda percentual em relação ao topo histórico, essencial para avaliar o risco do ativo.
+* **KPIs Dinâmicos:** Variação do período, Preço de Fechamento e Volume Financeiro.
 
-Analytics: Microsoft Power BI com medidas DAX avançadas para estatística financeira.
+   ![Monitor de Ativos](files/images/print_2_tela1.png)
 
-📈 Tour pelo Dashboard
-1. Monitor de Ativos (Análise Técnica)
-Focada na análise "Micro", esta tela permite dissecar o comportamento de um ativo específico.
+### 2. Radar de Mercado
+   Focada na visão "Macro", responde onde estão as oportunidades e os riscos do mercado.
+* **Matriz Risco x Retorno:** Cruza a Volatilidade no eixo X com a Rentabilidade no eixo Y. Permite identificar ativos de alto retorno e baixo risco.
+* **Mapa de Liquidez:** Visão hierárquica de setores, onde o tamanho representa o volume financeiro e a cor indica a performance.
+* **Ranking:** Top 20 ativos por rentabilidade no período.
 
-Destaque Técnico: Implementação de gráfico Candlestick nativo combinado com médias móveis.
+   ![Radar de Mercado](files/images/print_3_tela2.png)
 
-Gestão de Risco: Gráfico de Drawdown Histórico (área vermelha), calculado via DAX complexo para medir a queda percentual em relação ao topo histórico, essencial para avaliar o risco do ativo.
+### 3. Relatórios Detalhados
+   Focada na granularidade e na qualidade dos dados cadastrais.
 
-KPIs Dinâmicos: Variação do período, Preço de Fechamento e Volume Financeiro.
+* **Enriquecimento:** Traz dados exclusivos como saúde tributária, nível de atividade e porte da empresa, que permite uma análise mais profunda da empresa.
+* **Tratamento de Dados:** Máscara de CNPJ aplicada via DAX para formatar visualmente os dados sem impactar a performance do banco de dados.
 
-![alt text](print_2_tela1.png)
+   ![Relatórios Detalhados](files/images/print_4_tela3.png)
 
-2. Radar de Mercado (Estratégia & Portfólio)
-Focada na visão "Macro", responde onde estão as oportunidades e os riscos do mercado.
+---
 
-Matriz Risco x Retorno (Scatter Plot): O coração da estratégia. Cruza a Volatilidade (Desvio Padrão anualizado) no eixo X com a Rentabilidade no eixo Y. Permite identificar ativos na "Fronteira Eficiente" (Alto Retorno, Baixo Risco) e ativos tóxicos.
+## 🧠 Destaques Técnicos
 
-Mapa de Liquidez (Treemap): Visão hierárquica de setores, onde o tamanho representa o volume financeiro e a cor indica a performance (Verde/Vermelho).
+### 🐍 Python (ETL)
+* Script de carga incremental e tratamento de nulos.
+* Geração de chaves para otimizar relacionamentos no Power BI.
 
-Ranking: Top N ativos por rentabilidade no período.
+### 📊 DAX
 
-![alt text](print_3_tela2.png)
+Abaixo estão as principais medidas desenvolvidas para solucionar regras de negócio:
 
-3. Relatórios Detalhados (Auditoria & Compliance)
-Focada na granularidade e na qualidade do dado cadastral, alinhada ao core business da Neoway.
+### _Dimensoes
 
-Enriquecimento: Traz dados exclusivos como Saúde Tributária, Nível de Atividade e Porte da empresa.
+#### CNPJ_Formatado
+* **Objetivo:** Melhorar a legibilidade do campo cnpj aplicando uma máscara padrão de CNPJ (XX.XXX.XXX/XXXX-XX) sem alterar o dado original utilizado nos relacionamentos.
+* **Lógica:** A medida verifica o comprimento do campo: se tiver 14 dígitos, aplica a formatação direta; se tiver 13 dígitos (perda de zero à esquerda), realiza a sanitização do dado adicionando o zero antes de formatar. Caso contrário, retorna o valor original.
 
-Tratamento de Dados: Máscara de CNPJ aplicada via DAX para formatar visualmente os dados sem impactar a performance do banco de dados.
+---
+#### Titulo_Completo
+* **Objetivo:** Aumentar a clareza do gráfico candlestick fornecendo contexto ao título do visual utilizando nome do ativo e período selecionado.
+* **Lógica:** Constrói uma string dinâmica baseada no contexto de filtro atual. Utiliza SELECTEDVALUE para identificar o ativo ou aplicar um valor default "Mercado" caso nenhum ativo esteja selecionado e concatena com as datas de início e fim do período, aplicando formatação de texto.
 
-![alt text](print_4_tela3.png)
+---
+#### Ultima_Atualizacao
+* **Objetivo:** Garantir a transparência e a confiabilidade do dashboard, informando ao usuário exatamente até quando os dados apresentados são válidos.
+* **Lógica:** Busca a data mais recente presente na tabela fCotacoes. O resultado é convertido do formato de data para texto e concatenado com uma string.
 
-🧠 Destaques Técnicos (The "Secret Sauce")
-🐍 Python (ETL)
-Script de carga incremental e tratamento de nulos.
+---
+#### Drawdown%
+* **Objetivo:** Mensurar o risco de investimento calculando a queda percentual do preço atual em relação ao seu topo histórico. Responde à pergunta: "Quanto o investidor estaria perdendo hoje se tivesse comprado no pior momento?"
+* **Lógica:** Implementa um padrão de cálculo de Máximo Acumulado. A função CALCULATE com FILTER e ALLSELECTED percorre o histórico do período selecionado para encontrar o valor máximo atingido até a data atual. A medida utiliza o [Preço Fechamento (Contínuo)] para garantir que dias sem negociação ou finais de semana não gerem falsos drawdowns de -100%.
 
-Geração de chaves sub-rogadas para otimizar relacionamentos no Power BI.
+---
+#### Preco_Fechamento_Cont
+* **Objetivo:** Garantir a continuidade visual em gráficos de linha e a integridade matemática de cálculos, evitando que o preço "caia a zero" ou fique vazio em dias sem pregão, sejam finais de semana ou feriados.
+* **Lógica:** A medida ignora o filtro de data atual para varrer o passado e identificar a data mais recente que possui registro de valor de negociação, projetando este último valor para o dia atual.
 
-Filtro inteligente de janelas temporais (YTD) na camada Gold para performance.
+---
+#### Preco_Fechamento_Periodo
+* **Objetivo:** Exibir o valor do ativo no final do período selecionado, em vez de realizar uma soma sem sentido de todos os preços do ano. Trata o preço como um snapshot de fim de período.
+* **Lógica:** Identifica a data mais recente disponível e utiliza CALCULATE para restringir a agregação apenas aos registros desse dia específico, ignorando os dias anteriores do período.
 
-📊 DAX Avançado
-Cálculo de Volatilidade: Uso de funções estatísticas (STDEV.P) normalizadas pela média para criar o coeficiente de variação.
+---
+#### Rentabilidade%
+* **Objetivo:** Calcular a performance absoluta do ativo dentro do período selecionado.
+* **Lógica:** Calcula a variação percentual (Valor_Final - Valor_Inicial) / Valor_Inicial. A medida utiliza MIN(fCotacoes[dt_pregao]) e MAX em vez das datas da dimensão calendário para garantir que os preços de referência sejam buscados no primeiro e último dia útil com pregão, evitando erros de divisão por zero ou valores nulos caso o período inicie em um feriado ou final de semana.
 
-Correção de Feriados (Last Non-Blank): O gráfico de Drawdown utiliza lógica de inteligência temporal para projetar o último preço de fechamento sobre finais de semana, evitando o efeito de "queda para zero" nos gráficos de linha.
+---
+#### Variacao%
+* **Objetivo:** Calcular a amplitude total de movimento do preço dentro do período selecionado, iniciando no momento de abertura do mercado e terminando no seu encerramento. Diferente da rentabilidade tradicional que compara Fechamento vs. Fechamento, essa métrica mostra o ganho/perda real de uma posição iniciada na Abertura do primeiro dia e encerrada no Fechamento do último dia.
+* **Lógica:** Calcula o valor da coluna vl_abertura no início do período e compara com a coluna vl_fechamento no final do período, retornando a variação percentual entre esses dois pontos distintos.
 
-Contexto de Transição: Medidas iteradoras (AVERAGEX) para calcular corretamente a rentabilidade média de setores, evitando distorções de agregação simples.
+---
+#### Volatilidade
+* **Objetivo:** Mensura o grau de risco e instabilidade do ativo.
+* **Lógica:** A medida obtém o Desvio Padrão dos preços de fechamento e o normaliza dividindo pela média do período. Isso transforma a volatilidade em um indicador percentual.
 
-🚀 Como Executar
-Clone o repositório.
+---
+## 🚀 Como Executar
 
-Execute os scripts na pasta /scripts para gerar os arquivos .csv processados.
+1. Clone o repositório.
+2.  Execute os scripts na pasta `/scripts` seguindo a ordem lógica:
+    * `Extract`: Para ingestão dos dados brutos.
+    * `Transform`: Para limpeza e padronização.
+    * `Load`: Para modelagem e geração dos arquivos `.csv` finais.
+3. Abra o arquivo teste_bi.pbix no Power BI Desktop e clique em **Atualizar** para carregar os dados do dashboard.
 
-Abra o arquivo .pbix no Power BI Desktop.
-
-Desenvolvido por Douglas como parte do case técnico para a NeoWay.
+---
+*Desenvolvido por **Douglas** como parte do case técnico para a NeoWay.*
