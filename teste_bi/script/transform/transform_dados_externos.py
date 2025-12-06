@@ -40,6 +40,9 @@ def transform_dados_externos():
             df['Data_Temp'] = df[col_data].astype(str).str.split(' ').str[0]
             
             df['Data'] = pd.to_datetime(df['Data_Temp'], format='%d/%m/%Y', errors='coerce')
+
+            data_corte = '2022-01-01'
+            df = df[df['Data'] >= data_corte].copy()
             
             df[target_column] = clean_numeric(df[col_valor])
             
