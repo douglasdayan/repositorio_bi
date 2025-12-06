@@ -6,19 +6,27 @@ SOURCE_PATH = os.path.join(BASE_DIR, 'files', 'spreadsheets')
 TARGET_PATH = os.path.join(BASE_DIR, 'files', 'raw')
 
 def extract_cotacoes():
-    file_name = 'cotacoes_bolsa.csv'
-    input_file = os.path.join(SOURCE_PATH, file_name)
-    output_file = os.path.join(TARGET_PATH, 'extract_cotacoes.csv')
 
-    print(f"{file_name}")
+    files_map = [
+        'cotacoes_bolsa.csv',
+        'eventos_corporativos.csv'
+    ]
 
-    if not os.path.exists(input_file):
-        print(f"{file_name} não encontrado.")
+    for file_name in files_map:
+        input_file = os.path.join(SOURCE_PATH, file_name)
+        output_name = f"extract_{file_name}"
+        output_file = os.path.join(TARGET_PATH, output_name)
 
-    df = pd.read_csv(input_file, sep=';', decimal='.', encoding='utf-8')
-    df.to_csv(output_file, index=False, sep=';', decimal=',', encoding='utf-8')
-    
-    print(f"{len(df)} linhas extraídas para: {output_file}")
+        if not os.path.exists(input_file):
+            print(f"{file_name} não encontrado.")
+            continue
+
+        print(f"{file_name}")
+
+        df = pd.read_csv(input_file, sep=';', decimal='.', encoding='utf-8')
+        df.to_csv(output_file, index=False, sep=';', decimal=',', encoding='utf-8')
+        
+        print(f"{len(df)} linhas extraídas para: {output_file}")
 
 if __name__ == "__main__":
     extract_cotacoes()

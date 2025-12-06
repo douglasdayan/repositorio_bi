@@ -16,12 +16,28 @@ def transform_cotacoes():
 
     try:
         df = pd.read_csv(input_path, sep=';', decimal=',', encoding='utf-8')
-
         df['dt_pregao'] = pd.to_datetime(df['dt_pregao'], format='%Y%m%d', errors='coerce')
 
-        data_corte = '2022-01-01'
-        df = df[df['dt_pregao'] >= data_corte].copy()
+        df = df[df['dt_pregao'] >= '2022-01-01'].copy()
         
+        eventos = [
+            {'cd_acao': 'GFSA3', 'data_ex': '2022-09-23', 'fator': 9.0},
+        ]
+
+        df_eventos = pd.DataFrame(eventos)
+        df_eventos['data_ex'] = pd.to_datetime(df_eventos['data_ex'])
+        
+        df = df.merge(df_eventos, on='cd_acao', how='left')
+        df['fator'] = df['fator'].fillna(1.0)
+        
+        mask_ajuste = df['dt_pregao'] < df['data_ex']
+        cols_preco = ['vl_abertura', 'vl_maximo', 'vl_minimo', 'vl_fechamento']
+        
+        for col in cols_preco:
+            df.loc[mask_ajuste, col] = df.loc[mask_ajuste, col] * df.loc[mask_ajuste, 'fator']
+        
+        df.drop(columns=['data_ex', 'fator'], inplace=True)
+
         mapa_mercado = {
             10: 'Mercado à Vista',
             70: 'Opção de Compra',
@@ -35,12 +51,14 @@ def transform_cotacoes():
             'vl_volume', 'qt_tit_neg'
         ]
         
-        df = df[cols_uteis]
+        cols_finais = [c for c in cols_uteis if c in df.columns]
+        df = df[cols_finais]
+
         df.to_csv(output_path, index=False, sep=';', decimal=',', encoding='utf-8')
         print(f"transform_cotacoes.csv gerado com {len(df)} linhas.")
 
     except Exception as e:
-        print(f"ERRO Crítico em Cotações: {e}")
+        print(f"Erro em Cotações: {e}")
 
 if __name__ == "__main__":
     transform_cotacoes()
