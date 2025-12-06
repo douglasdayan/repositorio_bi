@@ -7,7 +7,7 @@ SOURCE_PATH = os.path.join(BASE_DIR, 'files', 'clean')
 TARGET_PATH = os.path.join(BASE_DIR, 'files', 'enrich')
 
 def load_fdados_externos():
-    start_date = '2010-01-01'
+    start_date = '2022-01-01'
     end_date = '2022-10-21'
     dates = pd.date_range(start=start_date, end=end_date, freq='D')
     fDadosExternos = pd.DataFrame({'Data': dates})

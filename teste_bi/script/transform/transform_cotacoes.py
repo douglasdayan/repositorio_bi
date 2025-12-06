@@ -19,10 +19,13 @@ def transform_cotacoes():
 
         df['dt_pregao'] = pd.to_datetime(df['dt_pregao'], format='%Y%m%d', errors='coerce')
 
+        data_corte = '2022-01-01'
+        df = df[df['dt_pregao'] >= data_corte].copy()
+        
         mapa_mercado = {
-            10: 'Vista (Padrão)',
-            70: 'Opções de Compra',
-            80: 'Opções de Venda'
+            10: 'Mercado à Vista',
+            70: 'Opção de Compra',
+            80: 'Opção de Venda'
         }
         df['tipo_mercado_desc'] = df['tp_merc'].map(mapa_mercado).fillna('Outros')
 
