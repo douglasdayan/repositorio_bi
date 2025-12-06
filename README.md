@@ -1,4 +1,4 @@
-# Monitor de Mercado B3 & Analytics - Neoway Challenge
+## Monitor de Mercado B3 & Analytics - Neoway Challenge
 
 Este projeto é uma solução de *Análise de Dados* desenvolvida para monitorar o mercado de ações brasileiro (B3), cruzando dados financeiros (cotações) com dados cadastrais.
 
