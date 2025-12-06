@@ -1,10 +1,10 @@
-# 📊 Monitor de Mercado B3 - Case Neoway
+# 📊 Monitor de Mercado B3 & Analytics - Neoway Challenge
 
 Este projeto é uma solução de *Análise de Dados* desenvolvida para monitorar o mercado de ações brasileiro (B3), cruzando dados financeiros (cotações) com dados cadastrais.
 
 O objetivo foi simular o ambiente de dados da **Neoway**, transformando dados brutos em inteligência de mercado para tomada de decisão estratégica.
 
-![Capa do Projeto](files/images/print_1.png)
+![Capa do Projeto]( teste_bi/files/images/print_1.png)
 
 ## 💼 O Desafio de Negócio
 
@@ -16,7 +16,7 @@ O mercado financeiro gera milhões de registros diários, mas dados isolados nã
 
 ## 🛠️ Arquitetura da Solução
 
-O projeto segue a arquitetura **Raw, Clean e Enrich**, garantindo governança e performance.
+O projeto segue a arquitetura **Raw, Clen e Enrich**, garantindo governança e performance.
 
 * **ETL:** Python utilizando a biblioteca Pandas para limpeza, tipagem e criação das tabelas fato e dimensão.
 * **Modelagem:** Star Schema (Fato Cotações, Fato Dados Externos, Dimensão Calendário, Dimensão Empresas).
@@ -32,7 +32,7 @@ O projeto segue a arquitetura **Raw, Clean e Enrich**, garantindo governança e 
 * **Gestão de Risco:** Gráfico de Drawdown Histórico, calculado via DAX para medir a queda percentual em relação ao topo histórico, essencial para avaliar o risco do ativo.
 * **KPIs Dinâmicos:** Variação do período, Preço de Fechamento e Volume Financeiro.
 
-   ![Monitor de Ativos](files/images/print_2_tela1.png)
+   ![Monitor de Ativos]( teste_bi/files/images/print_2_tela1.png)
 
 ### 2. Radar de Mercado
    Focada na visão "Macro", responde onde estão as oportunidades e os riscos do mercado.
@@ -40,7 +40,7 @@ O projeto segue a arquitetura **Raw, Clean e Enrich**, garantindo governança e 
 * **Mapa de Liquidez:** Visão hierárquica de setores, onde o tamanho representa o volume financeiro e a cor indica a performance.
 * **Ranking:** Top 20 ativos por rentabilidade no período.
 
-   ![Radar de Mercado](files/images/print_3_tela2.png)
+   ![Radar de Mercado]( teste_bi/files/images/print_3_tela2.png)
 
 ### 3. Relatórios Detalhados
    Focada na granularidade e na qualidade dos dados cadastrais.
@@ -48,7 +48,7 @@ O projeto segue a arquitetura **Raw, Clean e Enrich**, garantindo governança e 
 * **Enriquecimento:** Traz dados exclusivos como saúde tributária, nível de atividade e porte da empresa, que permite uma análise mais profunda da empresa.
 * **Tratamento de Dados:** Máscara de CNPJ aplicada via DAX para formatar visualmente os dados sem impactar a performance do banco de dados.
 
-   ![Relatórios Detalhados](files/images/print_4_tela3.png)
+   ![Relatórios Detalhados]( teste_bi/files/images/print_4_tela3.png)
 
 ---
 
@@ -99,7 +99,12 @@ Abaixo estão as principais medidas desenvolvidas para solucionar regras de neg�
 * **Lógica:** Calcula a variação percentual (Valor_Final - Valor_Inicial) / Valor_Inicial. A medida utiliza MIN(fCotacoes[dt_pregao]) e MAX em vez das datas da dimensão calendário para garantir que os preços de referência sejam buscados no primeiro e último dia útil com pregão, evitando erros de divisão por zero ou valores nulos caso o período inicie em um feriado ou final de semana.
 
 ---
-#### Variacao%
+#### Selic_Atual
+* **Objetivo:** Exibir a taxa de juros no final do período selecionado.
+* **Lógica:** A medida identifica a última data disponível na tabela de dados externos e recupera o valor da Selic apenas daquele dia, evitando a agregação incorreta de taxas diárias.
+
+---
+#### Variação%
 * **Objetivo:** Calcular a amplitude total de movimento do preço dentro do período selecionado, iniciando no momento de abertura do mercado e terminando no seu encerramento. Diferente da rentabilidade tradicional que compara Fechamento vs. Fechamento, essa métrica mostra o ganho/perda real de uma posição iniciada na Abertura do primeiro dia e encerrada no Fechamento do último dia.
 * **Lógica:** Calcula o valor da coluna vl_abertura no início do período e compara com a coluna vl_fechamento no final do período, retornando a variação percentual entre esses dois pontos distintos.
 
