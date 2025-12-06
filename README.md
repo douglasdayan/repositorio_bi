@@ -1,4 +1,4 @@
-# 📊 Monitor de Mercado B3 & Analytics - Neoway Challenge
+# Monitor de Mercado B3 & Analytics - Neoway Challenge
 
 Este projeto é uma solução de *Análise de Dados* desenvolvida para monitorar o mercado de ações brasileiro (B3), cruzando dados financeiros (cotações) com dados cadastrais.
 
@@ -6,7 +6,7 @@ O objetivo foi simular o ambiente de dados da **Neoway**, transformando dados br
 
 ![Capa do Projeto]( teste_bi/files/images/print_1.png)
 
-## 💼 O Desafio de Negócio
+## O Desafio de Negócio
 
 O mercado financeiro gera milhões de registros diários, mas dados isolados não geram insights. O desafio consistiu em:
 
@@ -14,7 +14,7 @@ O mercado financeiro gera milhões de registros diários, mas dados isolados nã
 * **Enriquecer** a análise com indicadores macroeconômicos (Dólar, Selic, IPCA).
 * **Desenvolver um Dashboard** que atendesse a três perfis: o Analista Técnico (Micro), o Gestor de Portfólio (Macro) e o Auditor (Compliance).
 
-## 🛠️ Arquitetura da Solução
+## Arquitetura da Solução
 
 O projeto segue a arquitetura **Raw, Clen e Enrich**, garantindo governança e performance.
 
@@ -23,7 +23,7 @@ O projeto segue a arquitetura **Raw, Clen e Enrich**, garantindo governança e p
 * **Analytics:** Microsoft Power BI com medidas DAX avançadas para estatística financeira.
 
 ---
-## 📈 Tour pelo Dashboard
+## Tour pelo Dashboard
 
 ### 1. Monitor de Ativos
    Focada na análise de ativos isoladamente, esta tela permite dissecar o comportamento de um ativo específico.
@@ -52,13 +52,13 @@ O projeto segue a arquitetura **Raw, Clen e Enrich**, garantindo governança e p
 
 ---
 
-## 🧠 Destaques Técnicos
+## Destaques Técnicos
 
-### 🐍 Python (ETL)
+### Python (ETL)
 * Script de carga incremental e tratamento de nulos.
 * Geração de chaves para otimizar relacionamentos no Power BI.
 
-### 📊 DAX
+### DAX
 
 Abaixo estão as principais medidas desenvolvidas para solucionar regras de negócio:
 
@@ -114,7 +114,7 @@ Abaixo estão as principais medidas desenvolvidas para solucionar regras de neg�
 * **Lógica:** A medida obtém o Desvio Padrão dos preços de fechamento e o normaliza dividindo pela média do período. Isso transforma a volatilidade em um indicador percentual.
 
 ---
-## 🚀 Como Executar
+## Como Executar
 
 1. Clone o repositório.
 2.  Execute os scripts na pasta `/scripts` seguindo a ordem lógica:
