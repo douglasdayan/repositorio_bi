@@ -33,5 +33,4 @@ def load_fdados_externos():
     fDadosExternos.to_csv(output_path, index=False, sep=';', decimal=',', encoding='utf-8-sig')
     print(f"fDadosExternos gerada de {start_date} a {end_date}.\n")
 
-if __name__ == "__main__":
-    load_fdados_externos()
+load_fdados_externos()

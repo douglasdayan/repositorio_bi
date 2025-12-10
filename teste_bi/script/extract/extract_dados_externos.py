@@ -27,5 +27,4 @@ def extract_dados_externos():
             
         print(f"{file_name} -> {output_name} ({len(df)} linhas)")
         
-if __name__ == "__main__":
-    extract_dados_externos()
+extract_dados_externos()

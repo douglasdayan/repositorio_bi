@@ -28,5 +28,4 @@ def extract_cotacoes():
         
         print(f"{len(df)} linhas extraídas para: {output_file}")
 
-if __name__ == "__main__":
-    extract_cotacoes()
+extract_cotacoes()
