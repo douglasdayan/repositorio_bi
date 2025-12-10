@@ -21,5 +21,4 @@ def load_fcotacoes():
     df.to_csv(output_path, index=False, sep=';', decimal=',', encoding='utf-8-sig')
     print(f"fCotacoes gerada com {len(df)} linhas.\n")
 
-if __name__ == "__main__":
-    load_fcotacoes()
+load_fcotacoes()

@@ -55,5 +55,4 @@ def transform_dados_externos():
         except Exception as e:
             print(f"ERRO {source_file}: {e}")
 
-if __name__ == "__main__":
-    transform_dados_externos()
+transform_dados_externos()

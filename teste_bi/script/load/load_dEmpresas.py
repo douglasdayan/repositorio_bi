@@ -58,5 +58,4 @@ def load_dempresas():
 
     print(f"dEmpresas gerada com {len(dEmpresas)} linhas.")
 
-if __name__ == "__main__":
-    load_dempresas()
+load_dempresas()

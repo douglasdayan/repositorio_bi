@@ -60,5 +60,4 @@ def transform_cotacoes():
     except Exception as e:
         print(f"Erro em Cotações: {e}")
 
-if __name__ == "__main__":
-    transform_cotacoes()
+transform_cotacoes()

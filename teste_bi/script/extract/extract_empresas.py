@@ -29,5 +29,4 @@ def extract_empresas():
             
         print(f"{file_name} -> {output_name} ({len(df)} linhas)")
 
-if __name__ == "__main__":
-    extract_empresas()
+extract_empresas()

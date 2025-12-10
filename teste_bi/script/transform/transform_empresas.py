@@ -50,5 +50,4 @@ def transform_empresas():
         except Exception as e:
             print(f"ERRO em {file_name}: {e}")
 
-if __name__ == "__main__":
-    transform_empresas()
+transform_empresas()

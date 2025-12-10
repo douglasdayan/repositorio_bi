@@ -52,5 +52,4 @@ def load_dcalendario():
     dCalendario.to_csv(output_path, index=False, sep=';', decimal=',', encoding='utf-8-sig')
     print(f"dCalendario gerada de {min_date.date()} à {max_date.date()}.\n")
 
-if __name__ == "__main__":
-    load_dcalendario()
+load_dcalendario()
